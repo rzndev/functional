@@ -262,44 +262,17 @@ public class FunctionalLesson {
 
     /** Hint: Collectors.joining() helps a lot! */
     public String fWord_f() throws Exception {
-        List<String> words = new ArrayList<>();
+        String result = "";
         try (BufferedReader reader = Files.newBufferedReader(Paths.get(THIS_FILE))
         ) {
-            Stream<String> stream = reader.lines();
-            stream.map(w -> w.split(WORD_DELIMITERS));
-
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] newWords = line.split(WORD_DELIMITERS);
-                for (String w: newWords) {
-                    if(w.toLowerCase().startsWith("f")) {
-                        words.add(w);
-                    }
-                }
-            }
+            result = reader.lines()
+                    .flatMap(w -> Stream.of(w.split(WORD_DELIMITERS)))
+                    .filter(w1 -> w1.toLowerCase().startsWith("f"))
+                    .distinct()
+                    .sorted()
+                    .collect(Collectors.joining(" "));
         }
-
-        List<String> uniqueWords = new ArrayList<>();
-        for (String w: words) {
-            if(!uniqueWords.contains(w)) {
-                uniqueWords.add(w);
-            }
-        }
-
-        Collections.sort(uniqueWords);
-
-        StringBuilder result = new StringBuilder();
-        boolean first = true;
-        for (String w: uniqueWords) {
-            if(first) {
-                first = false;
-            } else {
-                result.append(" ");
-            }
-            result.append(w);
-        }
-        return result.toString();
+        return result;
     }
 
 
@@ -309,13 +282,25 @@ public class FunctionalLesson {
      *
      * 13. Сгенерировать список из случайного числа (не более N) случайных чисел от 0 до X
      * (Один из вариантов решения - метод randomIntegerList() в тесте к этому уроку)
-     *
+     */
+     public List<Integer> generateRandomListInteger(int N, int X) {
+         return new Random().ints(new Random().nextInt(N), 0, X).boxed().collect(toList());
+     }
+
+     /*
      * 14. Сгенерировать список из случайного числа (не менее N1 и не более N2) строк
      *    случайной длины (не менее M1 и не более M2), состоящих из случайных символов с кодами от C1 до C2.
      * (Один из вариантов решения - метод randomStringList() в тесте к этому уроку,
      *  ещё один вариант - в методе logEverything_full в BasicsLessonTest)
-     *
-     * 15. В упражнении 12 код императивного метода написан человеком, который не учил Collections Framework.
+     */
+
+     List<String> generateRandomListString(int N1, int N2, int M1, int M2, int C1, int C2) {
+         Random random = new Random();
+        //List<Character> result = random.ints(C1, C2).boxed().flatMap(w -> Stream.of(Character.toChars(w))).collect(Collectors.toList());
+         return new ArrayList<>();
+     }
+
+     /* 15. В упражнении 12 код императивного метода написан человеком, который не учил Collections Framework.
      *    Оптимизируйте его.
      *
      * 16. Упражнения 6 и 7 реализуйте с помощью parallelStream
