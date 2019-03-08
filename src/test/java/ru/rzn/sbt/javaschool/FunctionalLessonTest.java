@@ -47,7 +47,7 @@ public class FunctionalLessonTest {
                     super.println(s);
                     printed.add(s);
                 }
-            };
+            }
 
             List<String> printed1 = new ArrayList<>();
             System.setOut(new SpyPS(printed1));
@@ -203,6 +203,69 @@ public class FunctionalLessonTest {
         assertEquals(s, s_f);
     }
 
+    @Test
+    public void generateRandomListInteger() throws Exception {
+        System.out.println(">>> generateRandomListInteger() test output start <<<");
+
+        List<Integer> integerList = instance.generateRandomListInteger(5,7);
+        integerList.forEach(System.out::println);
+        System.out.println(">>> generateRandomListInteger() test output end <<<");
+    }
+
+    @Test
+    public void generateRandomListString() throws Exception {
+        System.out.println(">>> generateRandomListString() test output start <<<");
+
+        List<String> stringList = instance.generateRandomListString(5,7, 2, 10, 48, 58);
+        stringList.forEach(System.out::println);
+        System.out.println(">>> generateRandomListString() test output end <<<");
+    }
+
+    @Test
+    public void fWord_15() throws Exception {
+        System.out.println(">>> fWord_15() test output start <<<");
+
+        String s = instance.fWord();
+        String s_f = instance.fWord_15();
+        System.out.println(s);
+        System.out.println(s_f);
+
+        System.out.println(">>> fWord+15() test output end <<<");
+        assertEquals(s, s_f);
+    }
+
+    @Test
+    public void ustas2alex_parallelStream() {
+        System.out.println(">>> ustas2alex() test output start <<<");
+        List<String> list = randomStringList();
+        System.out.println(Arrays.toString(list.toArray()));
+
+        String s = instance.ustas2alex(list);
+        String s_f = instance.ustas2alex_parallel_f(list);
+        System.out.println(s);
+        System.out.println(s_f);
+
+        System.out.println(">>> ustas2alex() test output end <<<");
+        assertEquals(s, s_f);
+    }
+
+    @Test
+    public void properties_parallel_f() {
+        System.out.println(">>> properties_parallel_f() test output start <<<");
+        Map<String, Object> map = new HashMap<>();
+        randomStringList().forEach(s -> map.put(s, random.nextInt()));
+        System.out.println(map);
+
+        String p = instance.properties(map);
+        String p_f = instance.properties_parallel_f(map);
+        System.out.println(p);
+        System.out.println("=====================");
+        System.out.println(p_f);
+
+        System.out.println(">>> properties_parallel_f() test output end <<<");
+        assertEquals(p, p_f);
+    }
+
 
     /* ========================================================================================================= */
     /* ===================        NO MORE TESTS - ONLY UTILITY METHODS       =================================== */
@@ -238,5 +301,6 @@ public class FunctionalLessonTest {
                     .toString()
                 ).collect(toList());
     }
+
 
 }

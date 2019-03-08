@@ -30,7 +30,8 @@ public class FunctionalLesson {
     /**
      * Упражнение 1. По порядку становись!<br/>
      * <br/>
-     * + для тех, кому скучно: сформулируйте правило сортировки словами и запишите в комментарий
+     * Сортировка осуществляется в порядке возрастания суммы цифр сравниваемых чисел. В случае, если сумма цифр
+     * числа одинакова, числа сортируются в натуральном порядке.
      */
     public void sort(List<Integer> list) {
         Collections.sort(list, new Comparator<Integer> () {
@@ -284,7 +285,7 @@ public class FunctionalLesson {
      * (Один из вариантов решения - метод randomIntegerList() в тесте к этому уроку)
      */
      public List<Integer> generateRandomListInteger(int N, int X) {
-         return new Random().ints(new Random().nextInt(N), 0, X).boxed().collect(toList());
+         return new Random().ints(1 + new Random().nextInt(N-1), 0, X).boxed().collect(toList());
      }
 
      /*
@@ -294,17 +295,64 @@ public class FunctionalLesson {
      *  ещё один вариант - в методе logEverything_full в BasicsLessonTest)
      */
 
-     List<String> generateRandomListString(int N1, int N2, int M1, int M2, int C1, int C2) {
+     public List<String> generateRandomListString(int N1, int N2, int M1, int M2, int C1, int C2) {
          Random random = new Random();
+         return Stream.generate(() -> random.ints(random.nextInt(M2 - M1) + M1, C1, C2)
+                 .boxed()
+                 .map(i -> String.valueOf(Character.toChars(i)))
+                 .collect(Collectors.joining(""))
+         ).limit(random.nextInt(N2 - N1) + N1)
+                 .collect(toList());
         //List<Character> result = random.ints(C1, C2).boxed().flatMap(w -> Stream.of(Character.toChars(w))).collect(Collectors.toList());
-         return new ArrayList<>();
      }
 
      /* 15. В упражнении 12 код императивного метода написан человеком, который не учил Collections Framework.
      *    Оптимизируйте его.
-     *
-     * 16. Упражнения 6 и 7 реализуйте с помощью parallelStream
+     */
+     public String fWord_15() throws Exception {
+         Set<String> uniqueWords = new TreeSet<>();
+         try (BufferedReader reader = Files.newBufferedReader(Paths.get(THIS_FILE))
+         ) {
+             String line;
+             while ((line = reader.readLine()) != null) {
+                 String[] newWords = line.split(WORD_DELIMITERS);
+                 for (String w: newWords) {
+                     if(w.toLowerCase().startsWith("f")) {
+                         uniqueWords.add(w);
+                     }
+                 }
+             }
+         }
+
+         StringBuilder result = new StringBuilder();
+         boolean first = true;
+         for (String w: uniqueWords) {
+             if(first) {
+                 first = false;
+             } else {
+                 result.append(" ");
+             }
+             result.append(w);
+         }
+         return result.toString();
+     }
+
+     /* 16. Упражнения 6 и 7 реализуйте с помощью parallelStream
      *
      */
+
+    public String ustas2alex_parallel_f(List<String> words) {
+        return words.parallelStream()
+                .map(w -> new String(new char[] {w.charAt(w.length() / 2)}))
+                .collect(Collectors.joining(""));
+    }
+
+    public String properties_parallel_f(Map<String, Object> map) {
+        return map.entrySet()
+                .parallelStream()
+                .map(e -> String.format("%s=%s\n", e.getKey(), e.getValue()))
+                .collect(Collectors.joining(""));
+    }
+
 
 }
